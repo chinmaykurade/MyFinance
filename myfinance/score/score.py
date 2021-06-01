@@ -1,10 +1,11 @@
 # %% Imports
 import pandas as pd
-from .intrinsic import intrinsic_value
-from . import basic_score as bs
-from . import profitability_ratios as pr
-from . import solvency_liquidity_ratios as slr
-from . import activity_ratios as ar
+from myfinance.score.intrinsic import intrinsic_value
+from myfinance.score import basic_score as bs
+from myfinance.score import profitability_ratios as pr
+from myfinance.score import solvency_liquidity_ratios as slr
+from myfinance.score import activity_ratios as ar
+from sklearn.base import BaseEstimator, TransformerMixin
 
 
 #%% Helper functions
@@ -29,16 +30,17 @@ def get_all_ratios(company_table, company_info, company_name):
 
 
 #%% Class definition
-class ScoreStocks:
-    def __init__(self, tables, infos):
-        self.tables = tables
-        self.infos = infos
+class ScoreStocks(BaseEstimator, TransformerMixin):
+    def __init__(self, type='basic'):
+        self.type = type
 
-
-    def basic_score(self):
+    @staticmethod
+    def basic_score(X):
+        tables = X['tables']
+        infos = X['infos']
         df = pd.DataFrame()
         for (company_name, company_info), (_, company_table) in \
-                zip(self.infos.items(), self.tables.items()):
+                zip(infos.items(), tables.items()):
 
             final_table = get_all_ratios(company_table, company_info, company_name)
             if isinstance(final_table, type(None)):
@@ -57,13 +59,15 @@ class ScoreStocks:
 
         return df
 
-
-    def piotroski_f_score(self):
+    @staticmethod
+    def piotroski_f_score(X):
+        tables = X['tables']
+        infos = X['infos']
         df = pd.DataFrame()
         all_tables = {}
 
         for (company_name, company_info), (_, company_table) in \
-                zip(self.infos.items(), self.tables.items()):
+                zip(infos.items(), tables.items()):
 
             if 'Long-term debt' not in list(company_table.columns):
                 company_table['Long-term debt'] = 0
@@ -114,11 +118,13 @@ class ScoreStocks:
             all_tables[company_name] = final_table.dropna(how='all', axis=1)
         return df, all_tables
 
-
-    def greenblatt_magic_rank(self):
+    @staticmethod
+    def greenblatt_magic_rank(X):
+        tables = X['tables']
+        infos = X['infos']
         df = pd.DataFrame()
         for (company_name, company_info), (_, company_table) in \
-                zip(self.infos.items(), self.tables.items()):
+                zip(infos.items(), tables.items()):
 
             company_table = company_table.fillna(0)
 
@@ -156,24 +162,33 @@ class ScoreStocks:
             # print(company_table['Earnings Yield'])
         return df
 
+    def fit(self, X, y=None):
+        return self
+
+    def predict(self, X):
+        if self.type == 'greenblatt':
+            return ScoreStocks.greenblatt_magic_rank(X)
+        elif self.type == 'piotroski':
+            return ScoreStocks.piotroski_f_score()
+        else:
+            return ScoreStocks.basic_score(X)
+
 
 # %% Test cell
 if __name__ == "__main__":
-    from preprocess.preprocess import StocksPreprocess
+    from myfinance.preprocess.preprocess import ExtractTablesAndInfos
 
     MONGO_URI = "mongodb+srv://chinmay:qwer4321@stocksdata.1ijjw.mongodb.net/test?retryWrites=true&w=majority"
 
-    preprocess_obj = StocksPreprocess(mongo_uri=MONGO_URI, db='STOCKS_YF_NIFTY100', collection_name='stocks_data')
+    preprocess_obj = ExtractTablesAndInfos(mongo_uri=MONGO_URI, db='STOCKS_YF', collection_name='stocks_data')
 
     num_data = 10
 
-    all_merged_tables = preprocess_obj.get_merged_tables(dropTTM=True)
+    all_cd = preprocess_obj.transform(X=None)
 
-    all_infos = preprocess_obj.get_infos()
+    score_obj = ScoreStocks(type='basic')
 
-    score_obj = ScoreStocks(all_merged_tables, all_infos)
-
-    dfs = score_obj.basic_score()
+    dfs = score_obj.predict(all_cd)
 
     # df_score = score_obj.greenblatt_magic_rank()
 
