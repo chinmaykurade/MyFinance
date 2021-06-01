@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block head %}
+
+{% endblock head %}
+
+{% block body %}
+    <div class="container row mb-4 py-2 media">
+        <div class=" border-bottom">
+            <h2 class="fw-bold"><a class="author-name" href="#">Basic Score</a></h2>
+        </div>
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">Rank</th>
+                    <th scope="col">Company Name</th>
+                    <th scope="col">Score</th>
+                    {% for col in dfs.index %}
+                        {% if loop.index != loop.length %}
+                            <th scope="col">{{ col }}</th>
+                        {% endif %}
+                    {% endfor %}
+                </tr>
+                </thead>
+                <tbody>
+                {% for company in dfs.columns %}
+                    <tr>
+                        <th>{{ loop.index }}</th>
+                        <th scope="row">{{ company }}</th>
+                        <td>{{ "%.2f"|format(dfs[company]['Score']) }}</td>
+                        {% for data in dfs[company] %}
+                            {% if loop.index != loop.length %}
+                                <td>{{ "%.2f"|format(data) }}</td>
+                            {% endif %}
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% for page_num in pages_list %}
+        {% if page_num %}
+            {% if page == page_num %}
+                <a class="btn btn-info mb-4" href="{{ url_for('main.home', page=page_num) }}">{{ page_num }}</a>
+            {% else %}
+                <a class="btn btn-outline-info mb-4" href="{{ url_for('main.home', page=page_num) }}">{{ page_num }}</a>
+            {% endif %}
+        {% else %}
+            ...
+        {% endif %}
+    {% endfor %}
+
+{% endblock body %}

@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+
+{% block head %}
+
+{% endblock head %}
+
+{% block body %}
+    <div class="container row mb-4 py-2 media">
+        <div class=" border-bottom">
+
+            <h2 class="fw-bold"><a class="author-name" href="#">{{ company['company_name'] }}</a></h2>
+            <div class="container row py-3">
+                <div class="col-md-6">
+                    <span>Current Price: {{ company['current_price'] }}</span>
+                </div>
+                <div class="col-md-6">
+                    <span>Market Cap: {{ company['market_cap'] }}</span>
+                </div>
+            </div>
+            <div class="container row py-1">
+                <div class="col-md-6">
+                    <span>P/E Ratio: {{ company['pe_ratio'] }}</span>
+                </div>
+            </div>
+
+
+            <div class="my-3">
+                <h3>Balance Sheet</h3>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th scope="col">Particulars</th>
+                        {% for year in company['balance_sheet']['years'] %}
+                            <th scope="col">{{ year }}</th>
+                        {% endfor %}
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for column in company['balance_sheet'] %}
+                    <tr>
+                        {% if column!='years' %}
+                            <th scope="row">{{ column }}</th>
+                            {% for data in company['balance_sheet'][column] %}
+                                <td>{{ data }}</td>
+                            {% endfor %}
+                        {% endif %}
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+
+            <div class="mt-5">
+                <h3>Profit and Loss Statement</h3>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th scope="col">Particulars</th>
+                        {% for year in company['financials']['years'] %}
+                            <th scope="col">{{ year }}</th>
+                        {% endfor %}
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for column in company['financials'] %}
+                    <tr>
+                        {% if column!='years' %}
+                            <th scope="row">{{ column }}</th>
+                            {% for data in company['financials'][column] %}
+                                <td>{{ data }}</td>
+                            {% endfor %}
+                        {% endif %}
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+
+            <div class="mt-5">
+                <h3>Cash Flow Statement</h3>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th scope="col">Particulars</th>
+                        {% for year in company['cash_flow']['years'] %}
+                            <th scope="col">{{ year }}</th>
+                        {% endfor %}
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for column in company['cash_flow'] %}
+                    <tr>
+                        {% if column!='years' %}
+                            <th scope="row">{{ column }}</th>
+                            {% for data in company['cash_flow'][column] %}
+                                <td>{{ data }}</td>
+                            {% endfor %}
+                        {% endif %}
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+{% endblock body %}

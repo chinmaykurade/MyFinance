@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block head %}
+
+{% endblock head %}
+
+{% block body %}
+    <div class="container row mb-4 py-2 media">
+        <div class=" border-bottom">
+            <h2 class="fw-bold"><a class="author-name" href="#">Top Companies</a></h2>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Company Name</th>
+                    <th scope="col">Current Price</th>
+                    <th scope="col">Market Cap</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for company in companies %}
+                    <tr>
+                        <th scope="row">{{ (page-1)*per_page+loop.index }}</th>
+                        <td><a class='author-name' href="{{ url_for('companies.company' ,company_id=company['_id']) }}">{{ company['company_name'] }}</a></td>
+                        <td>{{ company['current_price'] }}</td>
+                        <td>{{ company['market_cap'] }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% for page_num in pages_list %}
+        {% if page_num %}
+            {% if page == page_num %}
+                <a class="btn btn-info mb-4" href="{{ url_for('main.home', page=page_num) }}">{{ page_num }}</a>
+            {% else %}
+                <a class="btn btn-outline-info mb-4" href="{{ url_for('main.home', page=page_num) }}">{{ page_num }}</a>
+            {% endif %}
+        {% else %}
+            ...
+        {% endif %}
+    {% endfor %}
+
+{% endblock body %}

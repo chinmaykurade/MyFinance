@@ -1,0 +1,40 @@
+.navbar{
+    background-color: #4f62c4;
+}
+
+.media{
+    background-color: #f2faf9;
+    border: lightgray 1px solid;
+}
+
+.account-img{
+    width: 100px;
+    height: 100px;
+}
+
+.article-img{
+    width: 50px;
+    height: 50px;
+}
+
+.author-name{
+    color: cadetblue;
+    text-decoration: None;
+}
+
+body{
+    background-color: #f2f1ed;
+}
+
+.post-title{
+    font-family: Calibri;
+    color: black;
+    text-decoration: None;
+}
+
+
+
+.post-content{
+    /*Needed to preserve fromatting of the posts*/
+    white-space: pre;
+}
