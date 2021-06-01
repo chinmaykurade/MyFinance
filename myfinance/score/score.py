@@ -116,7 +116,7 @@ class ScoreStocks(BaseEstimator, TransformerMixin):
             df = pd.concat([df, ser], axis=1)
 
             all_tables[company_name] = final_table.dropna(how='all', axis=1)
-        return df, all_tables
+        return df
 
     @staticmethod
     def greenblatt_magic_rank(X):
@@ -169,7 +169,7 @@ class ScoreStocks(BaseEstimator, TransformerMixin):
         if self.type == 'greenblatt':
             return ScoreStocks.greenblatt_magic_rank(X)
         elif self.type == 'piotroski':
-            return ScoreStocks.piotroski_f_score()
+            return ScoreStocks.piotroski_f_score(X)
         else:
             return ScoreStocks.basic_score(X)
 
@@ -186,11 +186,7 @@ if __name__ == "__main__":
 
     all_cd = preprocess_obj.transform(X=None)
 
-    score_obj = ScoreStocks(type='basic')
+    score_obj = ScoreStocks(type='piotroski')
 
     dfs = score_obj.predict(all_cd)
-
-    # df_score = score_obj.greenblatt_magic_rank()
-
-    # df_at, table_ratios = score_obj.piotroski_f_score()
 
