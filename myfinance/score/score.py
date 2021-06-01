@@ -186,7 +186,7 @@ if __name__ == "__main__":
 
     all_cd = preprocess_obj.transform(X=None)
 
-    score_obj = ScoreStocks(type='piotroski')
+    score_obj = ScoreStocks(type='basic')
 
     dfs = score_obj.predict(all_cd)
 

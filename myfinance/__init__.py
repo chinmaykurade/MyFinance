@@ -1,3 +1,4 @@
+import logging
 import os
 
 from flask import Flask
@@ -6,7 +7,19 @@ from flask_bcrypt import Bcrypt
 # from flask_login import LoginManager
 from flask_mail import Mail
 from pymongo import MongoClient
-from .config import Config
+
+from . import config
+from . import logging_config
+
+# Configure logger for use in package
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+logger.addHandler(logging_config.get_console_handler())
+logger.propagate = False
+
+VERSION_PATH = config.PACKAGE_ROOT / 'VERSION'
+with open(VERSION_PATH, 'r') as version_file:
+    __version__ = version_file.read().strip()
 
 
 # db = SQLAlchemy()
@@ -18,7 +31,7 @@ pymongo = MongoClient(os.environ.get('MONGO_URI'))
 mail = Mail()
 
 
-def create_app(config_class=Config):
+def create_app(config_class=config.Config):
     app = Flask(__name__)
     app.config.from_object(config_class)
 

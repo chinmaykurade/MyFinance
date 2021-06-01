@@ -1,4 +1,7 @@
 import pandas as pd
+import logging
+
+logger = logging.getLogger("myfinance.score.profitability_ratios")
 
 def profitability_ratios(company_table, company_info, company_name='Name', replace=False):
     company_table = company_table.fillna(0)
@@ -8,7 +11,7 @@ def profitability_ratios(company_table, company_info, company_name='Name', repla
 
     # Check if EBITDA is not in the table (generally finance stocks, excluded for now)
     if 'EBITDA' not in list(company_table.columns):
-        print("Excluded: ", company_name)
+        logger.info(f'Excluded: {company_name}')
         return None
 
     if replace:
