@@ -31,9 +31,6 @@ def get_all_ratios(company_table, company_info, company_name):
 
 #%% Class definition
 class ScoreStocks(BaseEstimator, TransformerMixin):
-    def __init__(self, type='basic'):
-        self.type = type
-
     @staticmethod
     def basic_score(X):
         tables = X['tables']
@@ -162,7 +159,8 @@ class ScoreStocks(BaseEstimator, TransformerMixin):
             # print(company_table['Earnings Yield'])
         return df
 
-    def fit(self, X, y=None):
+    def fit(self, X, y='basic'):
+        self.type = y
         return self
 
     def predict(self, X):
@@ -186,7 +184,9 @@ if __name__ == "__main__":
 
     all_cd = preprocess_obj.transform(X=None)
 
-    score_obj = ScoreStocks(type='basic')
+    score_obj = ScoreStocks()
+
+    score_obj.fit(None, 'piotroski')
 
     dfs = score_obj.predict(all_cd)
 

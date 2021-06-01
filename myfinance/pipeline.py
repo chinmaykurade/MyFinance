@@ -9,6 +9,7 @@ import os
 _logger = logging.getLogger(__name__)
 MONGO_URI = os.environ.get('MONGO_URI')
 
+
 stocks_pipe = Pipeline(
     [
         (
@@ -17,7 +18,7 @@ stocks_pipe = Pipeline(
         ),
         (
             "scorer",
-            ScoreStocks(type='basic')
+            ScoreStocks()
         )
     ]
 )

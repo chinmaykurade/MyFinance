@@ -2,8 +2,7 @@ from flask import render_template, request, Blueprint
 from bson.objectid import ObjectId
 # from finsite.models import User, Post
 from .. import pymongo
-from ..preprocess.preprocess import StocksPreprocess
-from ..score.score import ScoreStocks
+from myfinance import predict
 
 companies = Blueprint('companies', __name__)
 
@@ -19,9 +18,5 @@ def company(company_id):
 def basic():
     display = request.args.get('display', 20, type=int)
     companies_data = list(pymongo.STOCKS_YF_NIFTY500.stocks_data.find().limit(10))
-    preprocess_obj = StocksPreprocess(data=list(companies_data))
-    all_merged_tables = preprocess_obj.get_merged_tables(dropTTM=True)
-    all_infos = preprocess_obj.get_infos()
-    score_obj = ScoreStocks(all_merged_tables, all_infos)
-    dfs = score_obj.basic_score()
+    dfs = predict.make_prediction(input_data=list(companies_data), type='basic')
     return render_template('basic_score.html', dfs=dfs.sort_values('Score', ascending=False, axis=1).iloc[:, :display])
