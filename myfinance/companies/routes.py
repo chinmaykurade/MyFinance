@@ -17,6 +17,6 @@ def company(company_id):
 @companies.route('/basic', methods=['POST', 'GET'])
 def basic():
     display = request.args.get('display', 20, type=int)
-    companies_data = list(pymongo.STOCKS_YF_NIFTY500.stocks_data.find().limit(10))
+    companies_data = list(pymongo.STOCKS_YF_NIFTY500.stocks_data.find())
     dfs = predict.make_prediction(input_data=list(companies_data), type='basic')
     return render_template('basic_score.html', dfs=dfs.sort_values('Score', ascending=False, axis=1).iloc[:, :display])
