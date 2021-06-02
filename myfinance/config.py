@@ -3,6 +3,7 @@ import pathlib
 import myfinance
 
 PACKAGE_ROOT = pathlib.Path(myfinance.__file__).resolve().parent
+SCRAPE_FILE = os.path.join(PACKAGE_ROOT, 'scrape.py')
 
 class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY')

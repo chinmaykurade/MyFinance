@@ -1,12 +1,15 @@
 import scrapy
+import sys
+import os
 from scrapy.crawler import CrawlerProcess
 from scrapy.utils.project import get_project_settings
-from myfinance.myfinance.spiders.yhofin import YhofinSpider
-from myfinance.myfinance.spiders.mypdf import MypdfSpider
+# from myfinance.myfinance.spiders.yhofin import YhofinSpider
+# from myfinance.myfinance.spiders.mypdf import MypdfSpider
+from myfinance.spiders.yhofin import YhofinSpider
+from myfinance.spiders.mypdf import MypdfSpider
 from multiprocessing import Process
 import pandas as pd
 import time
-import os
 
 
 #%% Function to create a crawler process
