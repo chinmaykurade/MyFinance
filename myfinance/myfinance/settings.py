@@ -6,6 +6,7 @@
 #     https://docs.scrapy.org/en/latest/topics/settings.html
 #     https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
+import os
 
 BOT_NAME = 'myfinance'
 
@@ -76,8 +77,8 @@ ITEM_PIPELINES = {
 
 FILES_STORE = 'D:/Code/Projects/MyFinance/myfinance/data/AROther'
 
-MONGO_URI = "mongodb+srv://chinmay:qwer4321@stocksdata.1ijjw.mongodb.net/test?retryWrites=true&w=majority"
-MONGO_DATABASE = "STOCKS_YF_NIFTY100"
+MONGO_URI = os.environ.get('MONGO_URI')
+MONGO_DATABASE = "STOCKS_YF_NIFTY100_TEMP"
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html
