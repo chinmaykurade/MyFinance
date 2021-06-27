@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block head %}
+
+{% endblock head %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-1">
+            <img class="rounded-circle article-img" src="{{ url_for('static', filename='profile_pics/' + user.image_file) }}">
+        </div>
+        <div class="col-md-11">
+            <h1>
+                Transactions by <span><a class="author-name" href="{{ url_for('users.user_transactions', username=user.username) }}">{{ user.username }}</a></span> ({{ transactions.total }})
+            </h1>
+        </div>
+    </div>
+    <div class="container row mb-4 mt-4 py-2 media">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Symbol</th>
+                <th scope="col">Action</th>
+                <th scope="col">Transacted Units</th>
+                <th scope="col">Unit Price</th>
+                <th scope="col">Fees</th>
+                <th scope="col">Split Ratio</th>
+                <th scope="col">Date</th>
+                <th scope="col"></th>
+            </tr>
+            </thead>
+            <tbody>
+                {% for transaction in transactions.items %}
+                    <tr>
+                        <th scope="row">{{ loop.index }}</th>
+                        <td>{{ transaction.symbol }}</td>
+                        <td>{{ transaction.action }}</td>
+                        <td>{{ transaction.transacted_units }}</td>
+                        <td>{{ transaction.unit_price }}</td>
+                        <td>{{ transaction.fees }}</td>
+                        <td>{{ transaction.split_ratio }}</td>
+                        <td>{{ transaction.date.strftime('%Y-%m-%d')}}</td>
+                        <td><a href="{{ url_for("transactions.show_transaction",transaction_id=transaction.id) }}">View</a></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% for page_num in transactions.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+        {% if page_num %}
+            {% if transactions.page == page_num %}
+                <a class="btn btn-info mb-4" href="{{ url_for('users.user_transactions', username=user.username, page=page_num) }}">{{ page_num }}</a>
+            {% else %}
+                <a class="btn btn-outline-info mb-4" href="{{ url_for('users.user_transactions', username=user.username, page=page_num) }}">{{ page_num }}</a>
+            {% endif %}
+        {% else %}
+            ...
+        {% endif %}
+    {% endfor %}
+{% endblock body %}

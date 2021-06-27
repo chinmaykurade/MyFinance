@@ -29,6 +29,12 @@ if(current_page==='register'){
 
 if(current_page==='new'){
     $('.nav-link.active').toggleClass('active');
-    var element = $('#navbarScroll > ul.navbar-nav.flex-row.flex-wrap.ms-md-auto > li:nth-child(1) > a');
+    var element = $('#navbarScroll > ul.navbar-nav.flex-row.flex-wrap.ms-md-auto > li:nth-child(2) > a');
+    element.toggleClass('active');
+}
+
+if(current_page==='new'){
+    $('.nav-link.active').toggleClass('active');
+    var element = $('#navbarScroll > ul.navbar-nav.flex-row.flex-wrap.ms-md-auto > li:nth-child(2) > a');
     element.toggleClass('active');
 }
